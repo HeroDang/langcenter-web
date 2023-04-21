@@ -3,12 +3,13 @@ import { getAnalytics } from 'firebase/analytics';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDdrcz5My-ugI8V73RFizbIOXJnqLY2Dts',
-  authDomain: 'lang-center.firebaseapp.com',
-  projectId: 'lang-center',
-  storageBucket: 'lang-center.appspot.com',
-  messagingSenderId: '293752566191',
-  appId: '1:293752566191:web:313f279c52406341287f5a',
+  apiKey: "AIzaSyCZIFdMsjBLubZBAGPLD1x7H2g5GQILyCE",
+  authDomain: "langmanager-99134.firebaseapp.com",
+  projectId: "langmanager-99134",
+  storageBucket: "langmanager-99134.appspot.com",
+  messagingSenderId: "43277949578",
+  appId: "1:43277949578:web:ce34086e2aff93ac592b73",
+  measurementId: "G-VQ0KF5GWWP"
 };
 
 const app = initializeApp(firebaseConfig);
