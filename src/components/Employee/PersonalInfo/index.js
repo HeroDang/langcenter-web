@@ -148,12 +148,12 @@ const PersonalInfo = props => {
       <h3>Personal information</h3>
       <Form form={form} layout="vertical" validateMessages={validateMessages}>
         <Row gutter={20}>
-          <Col xs={24} md={24} xl={10} lg={12} xl={12}>
+          <Col xs={24} md={24} xl={10} lg={12}>
             <Form.Item label="Full name" name="displayName" rules={[{ required: true }]}>
               <Input placeholder="Full name" />
             </Form.Item>
           </Col>
-          <Col xs={12} md={12} xl={4} lg={6} xl={6}>
+          <Col xs={12} md={12} xl={4} lg={6}>
             <Form.Item label="Gender" name="gender" rules={[{ required: true }]}>
               <Select>
                 <Option value="male">Male</Option>
@@ -162,7 +162,7 @@ const PersonalInfo = props => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={12} md={12} xl={10} lg={6} xl={6}>
+          <Col xs={12} md={12} xl={10} lg={6}>
             <Form.Item
               label="DOB"
               name="dob"

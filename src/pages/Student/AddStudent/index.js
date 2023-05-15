@@ -24,6 +24,8 @@ const AddStudent = () => {
     btnSave: idStudent ? 'Update' : 'Add',
   };
 
+  const [imgUrl, setImgUrl] = useState('');
+
   //notification
   useEffect(() => {
     if (isSubmit && students.isSuccess) {
@@ -133,6 +135,7 @@ const AddStudent = () => {
         <Breadcrumb.Item>{contentControl.breadcrumb}</Breadcrumb.Item>
       </Breadcrumb>
       <h3 className="heading">{contentControl.heading}</h3>
+
       <Card>
         <Row justify="center">
           <Form

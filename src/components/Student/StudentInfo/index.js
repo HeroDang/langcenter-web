@@ -4,9 +4,12 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
+// Edit: Start
 import * as lecturerActions from 'redux/actions/lecturers';
+import * as studentActions from 'redux/actions/students';
+// Edit: End
 import { getUsers } from 'redux/actions/users';
-import { lecturerState$, usersState$ } from 'redux/selectors';
+import { lecturerState$, studentState$, usersState$ } from 'redux/selectors';
 import { converToUser } from 'utils';
 import { checkUsernameIsExist, loadFieldsValue } from 'utils/loadFieldsValueForUser';
 import { dateValidator, phoneNumberValidator } from 'utils/validator';
@@ -15,13 +18,18 @@ import { idRoleLecturer } from 'constant/roles';
 
 const { Option } = Select;
 
-const PersonalInfo = props => {
+const StudentInfo = props => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [isSubmit, setIsSubmit] = useState(false);
   const [city, setCity] = useState('');
+
+  // Edit: Start
   const lecturers = useSelector(lecturerState$);
+  const students = useSelector(studentState$);
   const users = useSelector(usersState$);
+  // Edit: End
+  
   const validateMessages = {
     required: '${label} is required!',
     types: {
@@ -34,7 +42,7 @@ const PersonalInfo = props => {
   };
   const [form] = Form.useForm();
   const { typeSubmit } = props;
-  const { id } = useParams();
+  const { idStudent } = useParams();
   const dateFormat = 'DD/MM/YYYY';
 
   const handleSubmit = () => {
@@ -52,6 +60,7 @@ const PersonalInfo = props => {
       password,
       confirmPassword,
     } = data;
+    
     data.imageUrl = props.imgUrl;
 
     const currentDate = moment();
@@ -78,8 +87,8 @@ const PersonalInfo = props => {
               setIsSubmit(true);
               notification.error({ message: 'Confirm password does not match!' });
             } else {
-              const createdLecturer = converToUser(data, idRoleLecturer);
-              dispatch(lecturerActions.createLecturer.createLecturerRequest(createdLecturer));
+              const createdStudent = converToUser(data, null);
+              dispatch(studentActions.createStudents.createStudentsRequest(createdStudent));
               setCity(city);
               setIsSubmit(true);
             }
@@ -92,17 +101,17 @@ const PersonalInfo = props => {
 
       // edit lecturer
       if (typeSubmit === 'edit') {
-        const lecturer = lecturers.data.find(lecturer => lecturer.idLecturer === id);
+        const student = students.data.find(student => student.idStudent === idStudent);
 
         const editedValue = {
           ...data,
-          idUser: lecturer.idUser,
-          username: lecturer.User.username,
-          password: lecturer.User.password,
+          idUser: student.idUser,
+          username: student.User.username,
+          password: student.User.password,
           imageUrl: props.imgUrl,
         };
-        const editedLecturer = converToUser(editedValue, idRoleLecturer);
-        dispatch(lecturerActions.updateLecturer.updateLecturerRequest(editedLecturer));
+        const editedStudent = converToUser(editedValue, null);
+        dispatch(studentActions.updateStudents.updateStudentsRequest(editedStudent));
         setCity(city);
         setIsSubmit(true);
       }
@@ -111,34 +120,36 @@ const PersonalInfo = props => {
 
   // Load information lecturer to form
   React.useEffect(() => {
-    if (id && lecturers.data.length !== 0) {
-      const lecturer = lecturers.data.find(lecturer => lecturer.idLecturer === id);
-      loadFieldsValue(lecturer, setCity, form, props.setImgUrl);
+    if (idStudent && students.data.length !== 0) {
+      const student = students.data.find(student => student.idStudent === idStudent);
+      loadFieldsValue(student, setCity, form, props.setImgUrl);
     }
-  }, [lecturers.data]);
+  }, [students.data]);
 
   // Redirect to employee list
   React.useEffect(() => {
-    if (lecturers.isSuccess && isSubmit) {
-      if (id) {
-        notification.success({ message: 'Update lecturer success!' });
-        history.push('/lecturer');
+    if (students.isSuccess && isSubmit) {
+      if (idStudent) {
+        notification.success({ message: 'Update student success!' });
+        history.push('/student');
       } else {
-        notification.success({ message: 'Create lecturer success!' });
+        notification.success({ message: 'Create student success!' });
       }
       form.resetFields();
       props.setImgUrl(null);
     }
-  }, [lecturers, history]);
+  }, [students, history]);
 
   React.useEffect(() => {
     dispatch(lecturerActions.getLecturers.getLecturersRequest());
-    dispatch(getUsers.getUsersRequest());
+    // dispatch(getUsers.getUsersRequest());
+
+    dispatch(studentActions.getStudents.getStudentsRequest());
   }, []);
 
   return (
     <Card>
-      <h3>Personal information</h3>
+      <h3>Student information</h3>
       <Form form={form} layout="vertical" validateMessages={validateMessages}>
         <Input.Group>
           <Row gutter={20}>
@@ -187,7 +198,7 @@ const PersonalInfo = props => {
         </Input.Group>
         <ProvincePicker city={city} form={form} />
 
-        {!id && (
+        {!idStudent && (
           <Input.Group>
             <Row gutter={20}>
               <Col xs={24} lg={8}>
@@ -225,4 +236,4 @@ const PersonalInfo = props => {
   );
 };
 
-export default PersonalInfo;
+export default StudentInfo;

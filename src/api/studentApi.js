@@ -14,11 +14,15 @@ const studentApi = {
     return axiosClient.get(`${url}/class/${idClass}`);
   },
   create: async data => {
-    const res = await axiosClient.post(url, data);
+    const res = await axiosClient.post(`${url}/create`, data);
     return res.data;
   },
   update: async data => {
     const res = await axiosClient.patch(`${url}/${data.idStudent}`, data);
+    return res.data;
+  },
+  updateNew: async data => {
+    const res = await axiosClient.patch(`${url}/updateNew/${data.idStudent}`, data);
     return res.data;
   },
   updateScore: async data => {

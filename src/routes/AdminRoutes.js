@@ -20,6 +20,7 @@ import Profile from 'pages/Setting/Profile';
 import Setting from 'pages/Setting/Setting';
 import Student from 'pages/Student';
 import AddStudent from 'pages/Student/AddStudent';
+import AddStudentNew from 'pages/Student/AddStudentNew';
 import StudentDetails from 'pages/Student/StudentDetails';
 import ArrangeClass from 'pages/Student/StudentDetails/ArrangeClass';
 import React from 'react';
@@ -60,12 +61,13 @@ const adminRoutes = [
   {
     path: '/student/add',
     exact: true,
-    page: () => <AddStudent />,
+    //edit
+    page: () => <AddStudentNew />,
   },
   {
     path: '/student/edit/:idStudent',
     exact: true,
-    page: () => <AddStudent />,
+    page: () => <AddStudentNew />,
   },
   {
     path: '/student/details/:idStudent',
