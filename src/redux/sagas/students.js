@@ -31,7 +31,7 @@ function* createStudentsSaga(action) {
 
 function* updateStudentsSaga(action) {
   try {
-    yield call(studentApi.update, action.payload);
+    yield call(studentApi.updateNew, action.payload);
 
     yield put(studentActions.updateStudents.updateStudentsSuccess(action.payload));
   } catch (error) {
