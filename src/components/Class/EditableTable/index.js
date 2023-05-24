@@ -58,21 +58,24 @@ const EditableCell = ({
           margin: 0,
         }}
         name={dataIndex}
-        rules={[
+        rules={children[1] != null ? [
           {
             required: true,
             message: `Score is required.`,
           },
-        ]}>
+        ]: [{required: false},]}>
         <Input
+        placeholder='Input Score'
+          disabled = {children[1] == null}        
           style={{
             textAlign: 'center',
             width: '150px',
           }}
           ref={inputRef}
-          onChange={save}
+          // onChange={save}
           onPressEnter={save}
-          onBlur={save}></Input>
+          onBlur={save}
+          ></Input>
       </Form.Item>
     );
     form.setFieldsValue({
@@ -176,10 +179,10 @@ const EditableTable = props => {
       const currentData = dataSource.find(newData => newData.key == data.key);
       keys.map(keyIndex => {
         if (!isNaN(currentData[keyIndex])) {
-          if (typeof data[keyIndex] == 'string') {
+          if (data[keyIndex].score == null) {
             data[keyIndex] = {
               score: currentData[keyIndex],
-              idExem: data[keyIndex],
+              idExam: null,
             };
           } else {
             data[keyIndex].score = currentData[keyIndex];
@@ -187,6 +190,7 @@ const EditableTable = props => {
         }
       });
     });
+
     props.setDataSource(previousData);
   };
   return (
