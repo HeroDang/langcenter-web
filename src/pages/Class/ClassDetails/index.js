@@ -8,6 +8,7 @@ import Transcript from 'components/Class/Transcript';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AddAppoint from '../AddAppoint';
+import ClassDocument from 'components/Class/ClassDocument';
 
 const { TabPane } = Tabs;
 
@@ -60,6 +61,11 @@ const ClassDetails = () => {
           {role !== 'employee' && (
             <TabPane tab="Exam" key="4">
               <ClassExam classData={classData} />
+            </TabPane>
+          )}
+          {role !== 'employee' && (
+            <TabPane tab="Document" key="6">
+              <ClassDocument classData={classData} />
             </TabPane>
           )}
           {role === 'admin' && (

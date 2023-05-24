@@ -82,6 +82,11 @@ const INIT_STATE = {
     isLoading: false,
     isSuccess: false,
   },
+  documents: {
+    data: [],
+    isLoading: false,
+    isSuccess: false,
+  },
   bills: {
     data: [],
     isLoading: false,

@@ -13,6 +13,7 @@ import classesReducer from './classes';
 import lecturersReducer from './lecturers';
 import testTypesReducer from './testType';
 import examsReducer from './exam';
+import documentsReducer from './document';
 import billsReducer from './bills';
 import parameterReducer from './parameters';
 import INIT_STATE from 'redux/constant';
@@ -32,6 +33,7 @@ const appReducer = combineReducers({
   lecturers: lecturersReducer,
   testTypes: testTypesReducer,
   exams: examsReducer,
+  documents: documentsReducer,
   bills: billsReducer,
   parameters: parameterReducer,
 });
