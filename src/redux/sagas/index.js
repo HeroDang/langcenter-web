@@ -9,6 +9,7 @@ import { billSaga } from './bills';
 import { classSaga } from './classes';
 import { employeeSaga } from './employees';
 import { examSaga } from './exams';
+import { documentSaga } from './documents';
 import { lecturerSaga } from './lecturers';
 import { studentSaga } from './students';
 import { testTypeSaga } from './testTypes';
@@ -32,6 +33,7 @@ export default function* mySaga() {
     classSaga(),
     billSaga(),
     examSaga(),
+    documentSaga(),
     testTypeSaga(),
   ]);
 }

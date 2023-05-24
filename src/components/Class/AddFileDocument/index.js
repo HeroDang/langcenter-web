@@ -10,26 +10,21 @@ import {
   Progress,
   Row,
   Select,
-  TimePicker,
   Upload,
 } from 'antd';
-import courseApi from 'api/courseApi';
-import testTypeApi from 'api/testTypeApi';
 import { validateMessages } from 'constant/validationMessage';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { createExam, updateExam } from 'redux/actions/exams';
-import { examState$ } from 'redux/selectors';
+import { createDocument, updateDocument } from 'redux/actions/documents';
+import { examState$, documentState$ } from 'redux/selectors';
 import { storage } from 'utils/firebase';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './index.module.less';
 
-const { Option } = Select;
-
-const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, selectedExam }) => {
+const AddFileDocument = ({ isVisible, setIsVisible, classData, selectedDocument }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [fileUrls, setFileUrls] = useState([]);
@@ -63,7 +58,7 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
     <Row key={index} gutter={[20, 20]}>
       <Col span={22}>
         <a className={styles['text-url']} href={url} target="_blank" rel="noopener noreferrer">
-          {selectedExam == null ? url : selectedExam.examName}
+          {url}
         </a>
       </Col>
       <Col span={2}>
@@ -75,9 +70,9 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
   const uploadFiles = options => {
     const { onSuccess, onError, file, onProgress } = options;
     if (!file) return;
-    const fileName = `files/${uuidv4()}${file.name}`;
-    const sotrageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(sotrageRef, file);
+    const fileName = `files/documents/${idClass}/${uuidv4()}${file.name}`;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on(
       'state_changed',
       snapshot => {
@@ -102,47 +97,40 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
   };
 
   const dispatch = useDispatch();
-  const { isLoading, isSuccess } = useSelector(examState$);
+  const { isLoading: isDocLoading, isSuccess: isDocSuccess } = useSelector(documentState$);
   const handleSubmit = () => {
     form.validateFields().then(values => {
-      const { examName, idTestType, idColumn, testTime, testDate } = values;
-      const time = moment(testTime).format('HH:mm');
-      const date = moment(testDate).format('MM-DD-YYYY');
+      const { docName, postedDate } = values;
+      const date = moment(postedDate).format('MM-DD-YYYY');
       const res = fileUrls.map(element => element.url);
 
       // check test date between start and end date
-      const isValidDate = moment(testDate).isSameOrAfter(classData.startDate, 'day');
+      const isValidDate = moment(postedDate).isSameOrAfter(classData.startDate, 'day');
       if (!isValidDate) {
         notification.warning({
-          message: 'Invalid test date',
-          description: `Test date must same or before starting date (${moment(
+          message: 'Invalid post date',
+          description: `Post date must same or before starting date (${moment(
             classData.startDate
           ).format('DD/MM/YYYY')}).`,
         });
       } else {
         if (isEdit) {
           dispatch(
-            updateExam.updateExamRequest({
-              idExam: selectedExam.idExam,
-              examName,
+            updateDocument.updateDocumentRequest({
+              idDoc: selectedDocument.idDoc,
+              docName,
               fileUrl: res,
-              postedDate: moment().toDate(),
-              testTime: time,
-              testDate: date,
-              idTestType,
+              postedDate: date,
+              idClass
             })
           );
         } else {
           dispatch(
-            createExam.createExamRequest({
-              examName,
+            createDocument.createDocumentRequest({
+              docName,
               fileUrl: res,
               postedDate: moment().toDate(),
-              testTime: time,
-              testDate: date,
               idClass,
-              idTestType,
-              idColumn,
             })
           );
         }
@@ -154,21 +142,20 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
 
   // load selected exam
   useEffect(() => {
-    if (selectedExam) {
+    if (selectedDocument) {
       setIsEdit(true);
-      const date = moment(selectedExam.testDate).format('DD/MM/YYYY');
+      const date = moment(selectedDocument.postedDate).format('DD/MM/YYYY');
       form.setFieldsValue({
-        examName: selectedExam.examName,
-        idTestType: selectedExam.TestType.idTestType,
-        idColumn: selectedExam.Columns.columnName,
-        testTime: moment(selectedExam.testTime, 'HH:mm'),
-        testDate: moment(date, 'DD/MM/YYYY'),
-        file: selectedExam.fileUrl,
+        docName: selectedDocument.docName,
+        postedDate: moment(date, 'DD/MM/YYYY'),
+        file: selectedDocument.fileUrl,
       });
-      if (selectedExam.fileUrl.length > 0) {
+      if (selectedDocument.fileUrl.length > 0) {
         const tmp = [];
-        selectedExam.fileUrl.map(file => tmp.push({ url: file, uid: uuidv4() }));
+        selectedDocument.fileUrl.map(file => tmp.push({ url: file, uid: uuidv4() }));
         setFileUrls(tmp);
+      }else{
+        setFileUrls([]);
       }
     } else {
       setIsEdit(false);
@@ -179,8 +166,8 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
 
   // handle message
   useEffect(() => {
-    if (isCompleted && !isLoading) {
-      isSuccess
+    if (!isDocLoading && isCompleted) {
+      isDocSuccess
         ? notification.success({
             message: `${isEdit ? 'Edited' : 'Added'} exam successfully`,
           })
@@ -188,47 +175,21 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
     }
     setIsCompleted(false);
     setIsVisible(false);
-  }, [isLoading]);
+  }, [isDocLoading]);
 
   // init value for select options
-  const [columnOption, setColumnOption] = useState();
-  const [typeOption, setTypeOption] = useState();
   useEffect(() => {
-    if (!existedColumn && !classData && classData.idCourse) {
+    if (!classData && classData.idCourse) {
       return;
     }
     form.resetFields();
-    courseApi.getById(classData?.idCourse).then(res => {
-      const tmp = res.data.Columns;
-      const result = [];
-      tmp.map(col => {
-        if (!existedColumn.includes(col.idColumn)) {
-          result.push(
-            <Option key={col.idColumn} value={col.idColumn}>
-              {col.columnName}
-            </Option>
-          );
-        }
-      });
-      setColumnOption(result);
-    });
-
-    testTypeApi.getAllPromiss().then(res => {
-      const tmp = res.data;
-      const result = tmp.map(type => (
-        <Option key={type.idTestType} value={type.idTestType}>
-          {type.typeName}
-        </Option>
-      ));
-      setTypeOption(result);
-    });
-  }, [existedColumn]);
+  }, []);
 
   return (
     <Modal
       centered
       visible={isVisible}
-      title={isEdit ? 'Edit exam' : 'Add exam'}
+      title={isEdit ? 'Edit document' : 'Add document'}
       okText="Submit"
       cancelText="Cancel"
       onCancel={() => {
@@ -243,31 +204,13 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
         onFinish={handleSubmit}
         validateMessages={validateMessages}
         layout="vertical">
-        <Form.Item name="examName" label="Exam name" rules={[{ required: true }]}>
-          <Input placeholder="Exam name" maxLength="255" />
+        <Form.Item name="docName" label="Document name" rules={[{ required: true }]}>
+          <Input placeholder="Document name" maxLength="255" />
         </Form.Item>
-        <Form.Item name="idTestType" label="Type of exam" rules={[{ required: true }]}>
-          <Select showSearch placeholder="Exam type">
-            {typeOption}
-          </Select>
-        </Form.Item>
-        <Form.Item name="idColumn" label="Column name" rules={[{ required: true }]}>
-          <Select disabled={isEdit} showSearch placeholder="Column name">
-            {columnOption}
-          </Select>
-        </Form.Item>
-        <Row>
-          <Col span={12}>
-            <Form.Item name="testTime" label="Test time" rules={[{ required: true }]}>
-              <TimePicker allowClear={false} showNow={false} minuteStep={5} format={'HH:mm'} />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item name="testDate" label="Test date" rules={[{ required: true }]}>
-              <DatePicker allowClear={false} format={'DD/MM/YYYY'} />
-            </Form.Item>
-          </Col>
-        </Row>
+        {isEdit && <Form.Item name="postedDate" label="Posted date" rules={[{ required: false }]}>
+          <DatePicker allowClear={false} format={'DD/MM/YYYY'} />
+        </Form.Item>}
+        
         <Form.Item name="file" label="File">
           <Upload
             multiple={true}
@@ -288,4 +231,4 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
   );
 };
 
-export default AddFileExam;
+export default AddFileDocument;
