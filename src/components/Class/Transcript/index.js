@@ -148,7 +148,7 @@ const Transcript = () => {
             if (isHasExam) {
               customColumn[column.dataIndex] = { score: 'Input Score', idExam: isHasExam.idExam };
             } else {
-              customColumn[column.dataIndex] = 'Input Score';
+              customColumn[column.dataIndex] = { score: null};
             }
           }
         }
@@ -168,17 +168,21 @@ const Transcript = () => {
     keys.splice(0, 2);
     newData.map(data => {
       keys.map(key => {
-        if (typeof data[key] != 'string') {
+        if (data[key].score != null) {
           if (!isNaN(data[key].score)) {
             updateData.push({
               idExam: data[key].idExam,
-              score: data[key].score,
+              score: parseFloat(data[key].score),
               idStudent: data.key,
             });
           }
         }
       });
     });
+
+    
+    // console.log('updateData');
+    // console.log(updateData);
     handleMark(updateData);
   };
   return <div>{editable}</div>;

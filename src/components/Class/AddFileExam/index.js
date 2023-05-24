@@ -63,7 +63,7 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
     <Row key={index} gutter={[20, 20]}>
       <Col span={22}>
         <a className={styles['text-url']} href={url} target="_blank" rel="noopener noreferrer">
-          {url}
+          {selectedExam == null ? url : selectedExam.examName}
         </a>
       </Col>
       <Col span={2}>
@@ -155,6 +155,10 @@ const AddFileExam = ({ isVisible, setIsVisible, existedColumn, classData, select
   // load selected exam
   useEffect(() => {
     if (selectedExam) {
+
+      console.log('selectedExam');
+      console.log(selectedExam);
+
       setIsEdit(true);
       const date = moment(selectedExam.testDate).format('DD/MM/YYYY');
       form.setFieldsValue({

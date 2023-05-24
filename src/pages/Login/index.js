@@ -44,7 +44,7 @@ const Login = () => {
         history.push('/');
       } else {
         setLoading(false);
-        handleFailed(auth.message);
+        handleFailed(auth.message); 
       }
     }
   }, [auth]);

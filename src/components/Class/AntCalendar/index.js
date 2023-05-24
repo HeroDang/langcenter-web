@@ -143,7 +143,7 @@ const AntCalendar = ({ classData }) => {
             Cancel
           </Button>,
         ]}
-        centered>
+        >
         <Row>
           <Col span={12}>
             <ul className={styles['list-event']}>
