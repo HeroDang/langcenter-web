@@ -5,12 +5,15 @@ import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-de
 import { useDispatch, useSelector } from 'react-redux';
 import { columnTranscriptState$ } from 'redux/selectors';
 import { getColumnTranscripts, deleteColumnTranscript } from 'redux/actions/columnTranscripts';
+import { getCourseTypes } from 'redux/actions/courseTypes';
 import AddColumnTranscript from 'components/Course/AddColumnTranscript';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const ColumnTranscript = () => {
+  const [trigger, setTrigger] = useState(false);
+  const [idColumn, setIdDColumn] = useState(null);
   const columns = [
     {
       title: 'Column name',
@@ -37,14 +40,16 @@ const ColumnTranscript = () => {
         return (
           <div className="flex">
             <Tooltip title="Edit information">
-              <Link to={`/columntranscript/${idColumn}`}>
+              {/* <Link to={`/columntranscript/${idColumn}`}> */}
                 <Button
-                  onClick={() => setTrigger(!trigger)}
+                  onClick={() => {
+                    setIdDColumn(idColumn)
+                    setTrigger(!trigger)}}
                   type="primary"
                   ghost
                   icon={<EditOutlined />}
                 />
-              </Link>
+              {/* </Link> */}
             </Tooltip>
             <Tooltip title="Delete">
               <Button onClick={() => handleDelete(idColumn)} danger icon={<DeleteOutlined />} />
@@ -54,12 +59,11 @@ const ColumnTranscript = () => {
       },
     },
   ];
-
-  const [trigger, setTrigger] = useState(false);
   const dispatch = useDispatch();
   const { data, isLoading, isSuccess } = useSelector(columnTranscriptState$);
   useEffect(() => {
     dispatch(getColumnTranscripts.getColumnTranscriptsRequest());
+    dispatch(getCourseTypes.getCourseTypesRequest());
   }, []);
 
   const handleDelete = id => {
@@ -139,7 +143,7 @@ const ColumnTranscript = () => {
         </Col>
         <Col lg={{ order: 1 }} span={24} xl={8}>
           <Card>
-            <AddColumnTranscript trigger={trigger} />
+            <AddColumnTranscript trigger={trigger} idColumn={idColumn}/>
           </Card>
         </Col>
       </Row>

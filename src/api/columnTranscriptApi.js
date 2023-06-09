@@ -8,6 +8,11 @@ const columnTranscriptApi = {
     return res.data;
   },
 
+  getAllByCourseType: async (idCourseType) => {
+    const res = await axiosClient.get(`${url}findByIdCourseType/${idCourseType}`);
+    return res.data;
+  },
+
   getAllPromiss: () => {
     return axiosClient.get(url);
   },
@@ -18,7 +23,7 @@ const columnTranscriptApi = {
   },
 
   create: async columnTranscript => {
-    const res = await axiosClient.post(url, columnTranscript);
+    const res = await axiosClient.post(`${url}create`, columnTranscript);
     return res.data;
   },
 

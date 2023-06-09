@@ -11,7 +11,7 @@ import styles from './index.module.less';
 const moment = require('moment');
 const { confirm } = Modal;
 
-const AddAppoint = () => {
+const AddAppoint = (classData) => {
   const columnLecturers = [
     {
       title: 'Lecturer name',
@@ -267,7 +267,7 @@ const AddAppoint = () => {
         />
         <Form.Item>
           <div className={styles.flex}>
-            <Button type="primary" size="large" block onClick={handleSubmit}>
+            <Button disabled= {!(Date.parse(classData.endDate) > Date.now())} type="primary" size="large" block onClick={handleSubmit}>
               Submit
             </Button>
           </div>

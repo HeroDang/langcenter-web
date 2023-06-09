@@ -3,7 +3,7 @@ import { Form, Button, Row, Col, Table } from 'antd';
 import styles from './index.module.less';
 import { useDispatch, useSelector } from 'react-redux';
 import { columnTranscriptState$ } from 'redux/selectors';
-import { getColumnTranscripts } from 'redux/actions/columnTranscripts';
+import { getColumnTranscripts, getColumnTranscriptsByCourseType } from 'redux/actions/columnTranscripts';
 import { useParams } from 'react-router';
 
 const ColumnInput = ({ editCourse, ...props }) => {
@@ -26,9 +26,10 @@ const ColumnInput = ({ editCourse, ...props }) => {
 
   const { idCourse } = useParams();
   const dispatch = useDispatch();
-  const { data, isLoading } = useSelector(columnTranscriptState$);
+  const { data, isLoading, isSuccess } = useSelector(columnTranscriptState$);
   useEffect(() => {
-    dispatch(getColumnTranscripts.getColumnTranscriptsRequest());
+    // dispatch(getColumnTranscripts.getColumnTranscriptsRequest());
+    dispatch(getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeRequest(editCourse.idCourseType));
   }, []);
 
   const [selected, setSelected] = useState([]);

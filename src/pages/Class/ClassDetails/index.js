@@ -52,7 +52,7 @@ const ClassDetails = () => {
           </TabPane>
           {role !== 'employee' && (
             <TabPane tab="Transcript" key="2">
-              <Transcript />
+              <Transcript classData={classData}/>
             </TabPane>
           )}
           <TabPane tab="Students" key="3">
@@ -70,7 +70,7 @@ const ClassDetails = () => {
           )}
           {role === 'admin' && (
             <TabPane tab="Appoint lecturer" key="5">
-              <AddAppoint />
+              <AddAppoint classData = {classData}/>
             </TabPane>
           )}
         </Tabs>
