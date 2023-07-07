@@ -10,6 +10,10 @@ export function* columnTranscriptSaga() {
     fetchColumnTranscripts
   );
   yield takeLatest(
+    columnTranscriptActions.getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeRequest,
+    fetchColumnTranscriptsByCourseType
+  );
+  yield takeLatest(
     columnTranscriptActions.createColumnTranscript.createColumnTranscriptRequest,
     createColumnTranscript
   );
@@ -32,6 +36,19 @@ function* fetchColumnTranscripts(action) {
     );
   } catch (error) {
     yield put(columnTranscriptActions.getColumnTranscripts.getColumnTranscriptsFailure(error));
+  }
+}
+
+function* fetchColumnTranscriptsByCourseType(action) {
+  try {
+    const columnTranscripts = yield call(columnTranscriptApi.getAllByCourseType, action.payload);
+
+
+    yield put(
+      columnTranscriptActions.getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeSuccess(columnTranscripts)
+    );
+  } catch (error) {
+    yield put(columnTranscriptActions.getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeFailure(error));
   }
 }
 

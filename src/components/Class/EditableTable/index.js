@@ -1,10 +1,12 @@
 import { Button, Col, Form, Input, notification, Row, Table } from 'antd';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState, useParams, useSelector } from 'react';
 import { CSVLink } from 'react-csv';
 
 const EditableContext = React.createContext(null);
 
-const EditableRow = ({ index, ...props }) => {
+// const [classData, setClassData] = useState(null);
+
+const EditableRow = ({index, ...props }) => {
   const [form] = Form.useForm();
   return (
     <Form form={form} component={false}>
@@ -27,6 +29,7 @@ const EditableCell = ({
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
+
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
@@ -96,15 +99,21 @@ const EditableTable = props => {
   const [className, setClassName] = useState('');
   const [dataSource, setDataSource] = useState([]);
   const [previousData, setPreviousData] = useState([]);
+
+  // useEffect(() => {
+  //   setClassData(classData);
+  // },[])
+
   useEffect(() => {
     if (props.dataSource.length > 0) {
-      mappingDatasource(props.dataSource);
+      mappingDataSource(props.dataSource);
     }
     if (props.classRoom) {
       setClassName(props.classRoom.className + '_Transcript.csv');
     }
   }, [props]);
-  const mappingDatasource = dataInput => {
+
+  const mappingDataSource = dataInput => {
     const currentData = dataInput.map(item => ({ ...item }));
     setPreviousData(dataInput);
     const keys = Object.keys(currentData[0]);
@@ -194,7 +203,7 @@ const EditableTable = props => {
     props.setDataSource(previousData);
   };
   return (
-    <div>
+    <div >
       <Row gutter={[20, 20]} align="top">
         <Col xs={24} sm={16} md={10} lg={8} xl={8}></Col>
         <Col xs={0} md={2} lg={4} xl={8} flex="auto" />
@@ -225,4 +234,6 @@ const EditableTable = props => {
     </div>
   );
 };
+
+
 export default EditableTable;

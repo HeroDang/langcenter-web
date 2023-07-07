@@ -115,6 +115,7 @@ const ClassDocument = ({ classData }) => {
       <Col flex="auto" />
       <Col span={6}>
         <Button
+          disabled = {!(Date.parse(classData.endDate) > Date.now())}
           block
           type="primary"
           size="large"

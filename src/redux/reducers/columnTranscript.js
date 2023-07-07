@@ -24,6 +24,28 @@ export default function columnTranscriptsReducer(state = INIT_STATE.columnTransc
         isLoading: false,
         isSuccess: false,
       };
+
+    // get getColumnTranscriptsByCourseType
+    case getType(columnTranscriptActions.getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeRequest):
+      return {
+        ...state,
+        // data: action.payload,
+        isLoading: true,
+        isSuccess: false,
+      };
+    case getType(columnTranscriptActions.getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeSuccess):
+        return {
+        ...state,
+        data: action.payload,
+        isLoading: false,
+        isSuccess: true,
+      };
+    case getType(columnTranscriptActions.getColumnTranscriptsByCourseType.getColumnTranscriptsByCourseTypeFailure):
+      return {
+        ...state,
+        isLoading: false,
+        isSuccess: false,
+      };
     // create
     case getType(columnTranscriptActions.createColumnTranscript.createColumnTranscriptRequest):
       return {

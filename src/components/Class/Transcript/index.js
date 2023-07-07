@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EditableTable from '../EditableTable';
 
-const Transcript = () => {
+const Transcript = (classData) => {
   const { idClass } = useParams();
   const [classRoom, setClassRoom] = useState();
   const [columns, setColumns] = useState([]);
@@ -18,6 +18,7 @@ const Transcript = () => {
   useEffect(() => {
     setEditable(
       <EditableTable
+        classData={classData}
         classRoom={classRoom}
         columns={columns}
         dataSource={students}

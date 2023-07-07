@@ -10,6 +10,12 @@ export const getColumnTranscripts = createActions({
   getColumnTranscriptsFailure: error => error,
 });
 
+export const getColumnTranscriptsByCourseType = createActions({
+  getColumnTranscriptsByCourseTypeRequest: payload => payload,
+  getColumnTranscriptsByCourseTypeSuccess: payload => payload,
+  getColumnTranscriptsByCourseTypeFailure: error => error,
+});
+
 export const createColumnTranscript = createActions({
   createColumnTranscriptRequest: payload => payload,
   createColumnTranscriptSuccess: payload => payload,

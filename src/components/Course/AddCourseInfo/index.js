@@ -145,7 +145,7 @@ const AddCourseInfo = ({ form, goNext, handleSubmitCourse, editCourse, isBack })
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="Coure type name" name="type" rules={[{ required: true }]}>
+        <Form.Item label="Course type name" name="type" rules={[{ required: true }]}>
           <Select showSearch>
             {courseTypeList.map((type, index) => (
               <Option key={index} value={type.typeName}>

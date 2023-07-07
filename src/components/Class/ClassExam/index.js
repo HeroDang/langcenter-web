@@ -149,6 +149,7 @@ const ClassExam = ({ classData }) => {
       <Col flex="auto" />
       <Col span={4}>
         <Button
+          disabled = {!(Date.parse(classData.endDate) > Date.now())}
           block
           type="primary"
           size="large"
