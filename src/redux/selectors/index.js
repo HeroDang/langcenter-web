@@ -14,6 +14,7 @@ const testTypeState$ = state => state.testTypes;
 const examState$ = state => state.exams;
 const documentState$ = state => state.documents;
 const billState$ = state => state.bills;
+const learningState$ = state => state.learnings;
 
 const parameterState$ = state => state.parameters;
 export {
@@ -34,4 +35,5 @@ export {
   documentState$,
   billState$,
   parameterState$,
+  learningState$,
 };

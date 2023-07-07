@@ -243,21 +243,25 @@ const ArrangeClass = () => {
       if (data) {
         setIdBill(data.idBill);
         dispatch(updateStudents.updateStudentsRequest(studentUpdate));
+        // console.log("data bill 4");
       }
     } else {
       message.warning('Please, select class for student!');
     }
   };
   //component receipt details
-  const Receipt = ({ itemName, value }) => {
+  const Receipt = ({ itemName, value , money = false}) => {
     return (
       <Row className={styles['item-receipt']}>
         <Col span={10}>
           <p className={styles['item-name']}>{itemName}</p>
         </Col>
-        <Col span={14}>
+        <Col span={money ? 11 : 14}>
           <p className={styles.value}>{value}</p>
         </Col>
+        {money && <Col span={3}>
+          <p className={styles.value}>VND</p>
+        </Col>}
       </Row>
     );
   };
@@ -309,7 +313,7 @@ const ArrangeClass = () => {
           <Divider className={styles.divider} />
           <h4>Registered classes</h4>
           {selectedClasses.map(item => {
-            return <Receipt itemName={item.className} value={item.fee} />;
+            return <Receipt itemName={item.className} value={item.fee} money={true}/>;
           })}
           <Divider className={styles.divider} />
           <Row>
@@ -327,6 +331,7 @@ const ArrangeClass = () => {
               </Row>
             </Col>
           </Row>
+          
           <Popconfirm
             title="Payment successfully! Do you want to print invoice?"
             onCancel={() => history.push(`/student/details/${idStudent}`)}
