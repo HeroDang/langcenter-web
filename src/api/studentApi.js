@@ -18,6 +18,7 @@ const studentApi = {
     return res.data;
   },
   update: async data => {
+    console.log(data);
     const res = await axiosClient.patch(`${url}/${data.idStudent}`, data);
     return res.data;
   },
